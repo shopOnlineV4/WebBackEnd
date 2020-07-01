@@ -16,10 +16,12 @@ namespace WebApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
-
-        public UserController(UserManager<AppUser> userManager)
+        private readonly RoleManager<AppRole> _roleManager;
+        private readonly SignInManager<AppUser> _signInManager;
+        public UserController(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         // GET: api/User

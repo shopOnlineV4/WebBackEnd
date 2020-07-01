@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using UnitOfWork;
@@ -40,6 +41,25 @@ namespace WebApi.Controllers
             try
             {
                 return Ok(_container.ProductFactory.GetById(id));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest();
+            }
+        }
+
+
+
+        // GET: api/Product/5
+        [HttpGet("GetDetailProduct/{id}")]
+        public IActionResult GetDetailProduct(Guid id)
+        {
+            try
+            {
+                var data = _container.ProductFactory.GetById(id);
+                data.TypeProducts = _container.TypeProductFactory.GetAll().Result.ToList() ;
+                return Ok(data);
             }
             catch (Exception e)
             {

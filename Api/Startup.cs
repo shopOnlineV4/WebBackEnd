@@ -1,19 +1,23 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Api.Configuration;
 using AutoMapper;
 using Domain.EF;
-using Domain.Models.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using UnitOfWork;
-using WebApi.Configuration;
-using WebApi.Models.FactoryModule;
 
-namespace WebApi
+namespace Api
 {
     public class Startup
     {
@@ -42,7 +46,6 @@ namespace WebApi
             });
             services.AddAutoMapper(typeof(Startup));
             services.AddTransient<IUnitOfWork, UnitOfWork.UnitOfWork>();
-            services.AddScoped<IContainer, Container>();
             services.ConfigIdentity();
         }
 
@@ -56,13 +59,9 @@ namespace WebApi
 
             app.UseHttpsRedirection();
 
-            app.UseStaticFiles();
-
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseSwagger();
 
             app.UseCors("CorsPolicy");
 
