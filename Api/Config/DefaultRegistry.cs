@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using StructureMap;
 using UnitOfWork;
 
-namespace Api.Configuration
+namespace Api.Config
 {
     public class DefaultRegistry : Registry
     {

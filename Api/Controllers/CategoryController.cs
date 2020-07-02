@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Models.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ModelViews;
 using UnitOfWork;
@@ -15,7 +18,7 @@ namespace Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
-    {
+    {   
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         public CategoryController(IUnitOfWork unitOfWork, IMapper mapper)
@@ -57,6 +60,7 @@ namespace Api.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult Post([FromBody] CategoryMv category)
         {
             try

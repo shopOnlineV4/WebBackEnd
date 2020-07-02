@@ -7,7 +7,7 @@ namespace WebAdmin.Common
 {
     public class ConstKey
     {
-        public const string Base_URL = "https://localhost:44360";
+        public const string Base_URL = "https://localhost:44355";
 
         public const string Success = "SUCCESS";
 

@@ -1,4 +1,5 @@
-using Api.Configuration;
+using Api.Config;
+using Api.Models;
 using AutoMapper;
 using Domain.EF;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using UnitOfWork;
+using WebApi.Config;
 
 namespace Api
 {
@@ -24,6 +26,7 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ApplicationSetting>(Configuration.GetSection("ApplicationSetting"));
             services.AddControllers();
             services.AddDbContext<WebOnlineDbContext>(config =>
                 config.UseSqlServer(Configuration.GetConnectionString("SqlServerConnection")));
@@ -40,6 +43,7 @@ namespace Api
             services.AddAutoMapper(typeof(Startup));
             services.AddTransient<IUnitOfWork, UnitOfWork.UnitOfWork>();
             services.ConfigIdentity();
+            services.ConfigAuthen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

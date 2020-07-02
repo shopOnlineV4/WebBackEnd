@@ -24,5 +24,20 @@ namespace Api.Models.Collection
 
             return fileName;
         }
+
+        public static void DeteFile(string fileImageName)
+        {
+            try
+            {
+                string pathBase = HostEnvironment.WebRootPath + "\\productImages\\";
+                if (File.Exists(Path.Combine(pathBase, fileImageName)))
+                    File.Delete(Path.Combine(pathBase, fileImageName));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }
