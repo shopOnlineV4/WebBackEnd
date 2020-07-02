@@ -16,7 +16,7 @@ namespace Domain.DBConfig
             builder.Property(x => x.StatusOrder).HasDefaultValue(StatusOrder.Ordered);
             builder.Property(x => x.PayWays).IsRequired();
             builder.Property(x => x.UserId).IsRequired();
-            builder.HasOne(x => x.AppUser).WithMany(x => x.Orders).HasForeignKey(x => x.UserId);
+          
 
         }
     }

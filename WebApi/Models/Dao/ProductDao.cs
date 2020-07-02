@@ -72,7 +72,7 @@ namespace WebApi.Models.Dao
         {
             string pathBase = _hostEnvironment.WebRootPath + "\\productImages\\";
             //check image have exist or defalut to delete
-            
+
             if (data.FileData == null)
             {
                 data.ProductImage = "default.jpg";
@@ -118,17 +118,18 @@ namespace WebApi.Models.Dao
         }
         public bool Delete(object id)
         {
-            if (_unitOfWork.Products
-                .GetAll().Result
-                .Count(x => x.Images.Any(image => image.ProductId == (Guid)id) ||
-                            x.TypeProducts.Any(x => x.ProductId == (Guid)id)) > 0) return false;
-            _unitOfWork.TypeProducts.Delete(id);
-            return _unitOfWork.Commit();
-        }
-
-        public Task<List<ProductMv>> GetAll(int index = 1, int take = 10)
-        {
-            throw new NotImplementedException();
-        }
+        //    if (_unitOfWork.Products
+        //        .GetAll().Result
+        //        .Count(x => x.Images.Any(image => image.ProductId == (Guid)id) ||
+        //                    x.TypeProducts.Any(x => x.ProductId == (Guid)id)) > 0) return false;
+        //    _unitOfWork.TypeProducts.Delete(id);
+        //    return _unitOfWork.Commit();
+        return false;
     }
+
+    public Task<List<ProductMv>> GetAll(int index = 1, int take = 10)
+    {
+        throw new NotImplementedException();
+    }
+}
 }

@@ -25,7 +25,6 @@ namespace Domain.DBConfig
             builder.Property(x => x.ProductImage).IsRequired().HasDefaultValue("default.jpg").HasMaxLength(50);
             builder.Property(x => x.Price).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.Status).IsRequired().HasDefaultValue(Status.Active);
-            builder.HasOne(x => x.Category).WithMany(x => x.Products).HasForeignKey(x => x.CategoryId);
             }
     }
 }

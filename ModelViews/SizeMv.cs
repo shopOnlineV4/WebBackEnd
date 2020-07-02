@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Domain.Models.Entities
+namespace ModelViews
 {
-    public class Size
+    public class SizeMv
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
-       
     }
 }

@@ -12,8 +12,7 @@ namespace Domain.Models.Entities
         public string Address { get; set; }
         public string PortalCode { get; set; }
 
-        public List<Cart> Carts { get; set; }
-        public List<Order> Orders { get; set; } 
+       
        
     }
 }

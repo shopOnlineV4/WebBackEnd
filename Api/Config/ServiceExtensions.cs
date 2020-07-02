@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Api.Configuration
+namespace Api.Config
 {
     public static class ServiceExtensions
     {
