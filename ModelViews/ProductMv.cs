@@ -1,10 +1,11 @@
-﻿using Domain.Models.Enum;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 
-namespace Domain.Models.Entities
+
+namespace ModelViews
 {
-    public class Product
+    public class ProductMv
     {
         public Guid Id { get; set; }
         public Guid CategoryId { get; set; }
@@ -16,10 +17,14 @@ namespace Domain.Models.Entities
         public Guid ModifiedBy { get; set; }
         public DateTime DateCreate { get; set; }
         public DateTime DateModified { get; set; }
-        public int CountView { get; set; }
-        public int Status { get; set; }
+        public Status Status { get; set; }
+        public string ImageProductLocation { get; set; }
+        public string FileData { get; set; }
+        public IFormFile FileImage { get; set; }
 
 
-     
+        public CategoryMv Category { get; set; }
+        public List<ImageMv> Images { get; set; }
+        public List<TypeProductMv> TypeProducts { get; set; }
     }
 }

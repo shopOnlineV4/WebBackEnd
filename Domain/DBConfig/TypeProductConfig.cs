@@ -17,9 +17,7 @@ namespace Domain.DBConfig
             builder.Property(x => x.ProductId).IsRequired();
             builder.Property(x => x.ColorId).IsRequired();
             builder.Property(x => x.SizeId).IsRequired();
-            builder.HasOne(x => x.Product).WithMany(x => x.TypeProducts).HasForeignKey(x => x.ProductId);
-            builder.HasOne(x => x.ColorCode).WithMany(x => x.typeProducts).HasForeignKey(x => x.ColorId);
-            builder.HasOne(x => x.Size).WithMany(x => x.typeProducts).HasForeignKey(x => x.SizeId);
+         
         }
     }
 }

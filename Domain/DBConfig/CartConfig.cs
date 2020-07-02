@@ -17,7 +17,7 @@ namespace Domain.DBConfig
             builder.Property(x => x.ProductId).IsRequired();
             builder.Property(x => x.UserId).IsRequired();
             builder.Property(x => x.DateAdd).IsRequired().HasDefaultValue(DateTime.Now);
-            builder.HasOne(x => x.AppUser).WithMany(x => x.Carts).HasForeignKey(x => x.UserId);
+          
         }
     }
 }

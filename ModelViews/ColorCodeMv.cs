@@ -1,16 +1,16 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Domain.Models.Entities
+namespace ModelViews
 {
-    public class ColorCode
+    public class ColorCodeMv
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string ColorData { get; set; }
-
-       
+        
+        
     }
 }

@@ -1,19 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Api.Configuration;
 using AutoMapper;
 using Domain.EF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using UnitOfWork;
 
@@ -38,7 +31,7 @@ namespace Api
             services.ConfigureCors();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo()
+                c.SwaggerDoc("AppData", new OpenApiInfo()
                 {
                     Title = "My api",
                     Version = "0.1"
@@ -59,9 +52,13 @@ namespace Api
 
             app.UseHttpsRedirection();
 
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSwagger();
 
             app.UseCors("CorsPolicy");
 
@@ -75,7 +72,7 @@ namespace Api
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Shop Online Api");
+                c.SwaggerEndpoint("/swagger/AppData/swagger.json", "Shop Online Api");
             });
         }
     }

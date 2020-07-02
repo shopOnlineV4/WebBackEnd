@@ -14,8 +14,7 @@ namespace Domain.DBConfig
             builder.Property(x => x.Quality).IsRequired().HasDefaultValue(0);
             builder.Property(x => x.OrderId).IsRequired();
             builder.Property(x => x.TypeId).IsRequired();
-            builder.HasOne(x => x.Oder).WithMany(x => x.OrderDetails).HasForeignKey(x => x.OrderId);
-            builder.HasOne(x => x.TypeProduct).WithMany(x => x.OrderDetails).HasForeignKey(x => x.TypeId);
+          
 
         }
     }
