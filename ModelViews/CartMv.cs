@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Domain.Models.Entities
+namespace ModelViews
 {
-    public class Cart
+    public class CartMv
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
@@ -11,7 +11,7 @@ namespace Domain.Models.Entities
         public int Quantity { get; set; }
 
 
-       
+        public UserMv AppUser { get; set; }
        
     }
 }

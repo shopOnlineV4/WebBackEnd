@@ -1,10 +1,10 @@
-﻿using Domain.Models.Enum;
+﻿
 using System;
 using System.Collections.Generic;
 
-namespace Domain.Models.Entities
+namespace ModelViews
 {
-    public class Order
+    public class OrderMv
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
@@ -12,6 +12,7 @@ namespace Domain.Models.Entities
         public double Amount { get; set; }
         public int StatusOrder { get; set; }
 
-        
+        public UserMv AppUser { get; set; }
+        public List<OrderDetailMv> OrderDetails { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using Domain.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Api.Configuration
+namespace Api.Config
 {
     public static class IdentityConfig 
     {

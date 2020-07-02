@@ -1,9 +1,9 @@
-﻿using Domain.Models.Enum;
+﻿
 using System;
 
-namespace Domain.Models.Entities
+namespace ModelViews
 {
-    public class Image
+    public class ImageMv
     {
         public Guid Id { get; set; }
         public string FileName { get; set; }
@@ -13,8 +13,9 @@ namespace Domain.Models.Entities
         public DateTime DateModified { get; set; }
         public int Status { get; set; }
         public Guid ProductId { get; set; }
-
-      
+        public string FileInput { get; set; }
+        public string ImageLocation { get; set; }
+        public ProductMv Product { get; set; }
        
     }
 }
