@@ -10,4 +10,11 @@ namespace ModelViews
         public int Id { get; set; }
         public string Name { get; set; }
     }
+
+    public class SizeInput
+    {
+       
+        public string Name { get; set; }
+    }
+
 }

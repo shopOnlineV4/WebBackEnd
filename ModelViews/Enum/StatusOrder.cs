@@ -1,4 +1,5 @@
-﻿namespace ModelViews { 
+﻿namespace ModelViews.Enum
+{ 
     public enum StatusOrder
     {
         Ordered =0,

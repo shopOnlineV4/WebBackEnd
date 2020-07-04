@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using ModelViews.Enum;
 using System;
 using System.Collections.Generic;
 
@@ -40,7 +41,7 @@ namespace ModelViews
         public string FileData { get; set; }
     }
 
-    public class ProductsMv
+    public class ProductForList
     {
         public Guid Id { get; set; }
         public Guid CategoryId { get; set; }

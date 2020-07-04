@@ -11,6 +11,7 @@ using Domain.Models.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using ModelViews;
+using ModelViews.Enum;
 using UnitOfWork;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -38,7 +39,7 @@ namespace Api.Controllers
             {
                 //get All list Product
                 var products = await _unitOfWork.Products.Get(x => x.Name.Contains(name));
-                var data = _mapper.Map<List<ProductsMv>>(products);
+                var data = _mapper.Map<List<ProductForList>>(products);
                 // using auto mapper to auto mapping modelView  if same fieldName
                 foreach (var product in data)
                 {
@@ -65,7 +66,7 @@ namespace Api.Controllers
             var products = await _unitOfWork.Products.Get(x => x.Name.Contains(name));
             try
             {
-                var page = new PagingModelView<ProductsMv>
+                var page = new PagingModelView<ProductForList>
                 {
                     index = index,
                     Size = size,
@@ -73,7 +74,7 @@ namespace Api.Controllers
                     TotalPages = (products.Count() / size)
                 };
                 //get All list Product
-                var data = _mapper.Map<List<ProductsMv>>(products);
+                var data = _mapper.Map<List<ProductForList>>(products);
                 foreach (var product in data)
                 {
                     product.Category = _mapper.Map<CategoryInfo>(_unitOfWork.Categories.GetById(product.CategoryId).Result);
@@ -102,9 +103,9 @@ namespace Api.Controllers
                 product.UserCreate = _mapper.Map<UserInfor>(_unitOfWork.AppUsers.GetById(product.CreateBy).Result);
                 product.UserModified = _mapper.Map<UserInfor>(_unitOfWork.AppUsers.GetById(product.ModifiedBy).Result);
                 product.ImageProductLocation = ConstString.BaseLocationImageLink + product.ProductImage;
-
-                product.Images = null;
                 product.TypeProducts = null;
+                product.Images = null;
+               
                 return Ok(product);
             }
             catch (Exception e)
@@ -145,6 +146,7 @@ namespace Api.Controllers
             product.Price = data.Price;
             product.Status = (int)Status.Active;
             product.ModifiedBy = data.ModifiedBy;
+       
             product.DateModified = DateTime.Now;
             if (data.FileData == null)
             {

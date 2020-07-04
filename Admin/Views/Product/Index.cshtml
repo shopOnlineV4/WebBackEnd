@@ -1,0 +1,76 @@
+﻿@using ModelViews
+
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<ProductMv> products = ViewBag.Products;
+}
+@section Scripts{
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+        });
+    </script>
+
+}
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">Product Management</h1>
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <a href="@Url.Action("Create")" class="btn btn-success text-white">Add new</a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="container-fluid ">
+                <table class="table table-bordered" width="100%" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Image</th>
+                            <th>Price</th>
+                            <th>Date Create</th>
+                            <th>Status</th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var product in products)
+                        {
+                            <tr>
+                                <td>@product.Name</td>
+                                <td>@product.Category.Name</td>
+                                <td><img height="80" width="80" src="@product.ImageProductLocation" /></td>
+                                <td>@product.Price</td>
+                                <td>@product.DateCreate</td>
+                                <td>@product.Status</td>
+                                <td>
+                                    <a class="btn btn-success m-1 " href="@Url.Action("ForProduct","ImageProduct", new {productId = product.Id})">Images</a>
+                                    <a class="btn btn-primary m-1" href="@Url.Action("ForProduct","TypeProduct", new {productId = product.Id})">Type Products</a>
+                                    <a class="btn btn-danger m-1" href="@Url.Action("Update","Product", new {id = product.Id})">Update</a>
+                                    <a class="btn btn-dark m-1" href="@Url.Action("Disable","Product", new {id = product.Id})">Disable</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Image</th>
+                            <th>Price</th>
+                            <th>Date Create</th>
+                            <th>Status</th>
+                            <th>#</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

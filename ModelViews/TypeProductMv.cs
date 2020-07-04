@@ -16,4 +16,13 @@ namespace ModelViews
         public List<OrderDetailMv> OrderDetails { get; set; }
       
     }
+
+    public class TypeProductInput
+    {
+        
+        public int SizeId { get; set; }
+        public int ColorId { get; set; }
+        public Guid ProductId { get; set; }
+       
+    }
 }

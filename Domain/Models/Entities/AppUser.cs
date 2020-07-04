@@ -11,8 +11,5 @@ namespace Domain.Models.Entities
         public DateTime Dob { get; set; }
         public string Address { get; set; }
         public string PortalCode { get; set; }
-
-       
-       
     }
 }

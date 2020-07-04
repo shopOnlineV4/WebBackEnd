@@ -1,4 +1,5 @@
 ﻿
+using ModelViews.Enum;
 using System;
 using System.Collections.Generic;
 

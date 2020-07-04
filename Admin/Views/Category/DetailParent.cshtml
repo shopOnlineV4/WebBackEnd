@@ -1,0 +1,101 @@
+﻿@model ModelViews.CategoryMv
+
+@{
+    ViewData["Title"] = "DetailParent";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+@section Scripts{
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+}
+
+
+<h1 class="h3 mb-2 text-gray-800">Detail Parent Category</h1>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="m-5 p-5 container">
+        <form asp-action="Update" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <input type="text" class="form-control" asp-for="Name" placeholder="Enter Name Category">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+
+
+        <table class="mt-5 table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Name</th>
+                    <th>#</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                <tr>
+                    <td> <button class="btn btn-success" data-toggle="modal" data-target="#AddChild">Add new</button> </td>
+                    <td></td>
+                </tr>
+                @*@foreach (var category in Model.ListChilds)
+                {
+                    if (category != null)
+                    {
+                        <tr>
+                            <td>@category.Name</td>
+                            <td>
+                                <a class="btn btn-outline-danger" href="@Url.Action("Delete", "Category", new {id = category.Id})"><i class="fas fa-trash-alt"></i></a>
+                                <a class="btn btn-outline-warning" href="@Url.Action("DetailChild", "Category", new {id = category.Id})"><i class="fas fa-info-circle"></i></a>
+                            </td>
+                        </tr>
+                    }
+                }*@
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="AddChild" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add New Child</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="CreateChild" method="post">
+                    <input type="hidden" name="SubCategoryId" value="@Model.Id" />
+                    <div class="form-group">
+                        <label asp-for="Name"></label>
+                        <input type="text" class="form-control" name="Name" placeholder="Enter Name Category">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

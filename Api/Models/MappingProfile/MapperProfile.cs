@@ -14,8 +14,11 @@ namespace Api.Models.MappingProfile
         {
             CreateMap<AppUser, UserInfor>();
             CreateMap<Category, CategoryInfo>();
-            CreateMap<Product, ProductsMv>(); 
+            CreateMap<Product, ProductForList>(); 
             CreateMap<Product, ProductMv>();
+            CreateMap<Image, ImageMv>();
+
+
         }
     }
 }

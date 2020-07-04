@@ -1,4 +1,4 @@
-﻿namespace ModelViews
+﻿namespace ModelViews.Enum
 {
     public enum Status
     {
