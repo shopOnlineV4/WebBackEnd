@@ -101,7 +101,5 @@ namespace Admin.Controllers
 
             return RedirectToAction("ForProduct", "TypeProduct", new { productId = productId });
         }
-
-
     }
 }
