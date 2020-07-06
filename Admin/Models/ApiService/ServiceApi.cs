@@ -1,4 +1,5 @@
 ﻿using Admin.Common;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,9 @@ namespace Admin.Models.ApiService
         {
             if (token != null) _client.DefaultRequestHeaders.Authorization
                  = new AuthenticationHeaderValue("Bearer", token);
-            var res = await _client.PostAsJsonAsync(url, data);
+            var content = new StringContent(JsonConvert.SerializeObject(data));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var res = await _client.PostAsync(url, content);
             return res;
         }
 
@@ -53,10 +56,13 @@ namespace Admin.Models.ApiService
 
         public static async Task<HttpResponseMessage> Update<T>(string url, object id, T data, string token = null)
         {
-            var res = await _client.PutAsJsonAsync(url + "/" + id, data);
+            if (token != null) _client.DefaultRequestHeaders.Authorization
+                    = new AuthenticationHeaderValue("Bearer", token);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(data));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var res = await _client.PutAsync(url + "/" + id, content);
             return res;
         }
-
 
     }
 }

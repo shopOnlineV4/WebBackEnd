@@ -9,7 +9,7 @@
 @section Scripts
 {
 
-    <script src="~/lib/ckeditor/ckeditor.js"></script>
+    <script src="@Url.Content("~/")lib/ckeditor/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('editor');
     </script>
@@ -31,34 +31,32 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="form-group">
-                    <label asp-for="Name" class="control-label"></label>
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
+                    <label class="control-label">Name</label>
+                    <input name="Name" class="form-control" required />
                 </div>
-                @*<div class="form-group">
-                    <label asp-for="FileImage" class="control-label"></label>
-                    <input asp-for="FileImage" class="form-control" />
-                    <span asp-validation-for="FileImage" class="text-danger"></span>
-                </div>*@
+
                 <div class="form-group">
-                    <label asp-for="CategoryId" class="control-label"></label>
-                    <select asp-for="CategoryId" class="form-control select2">
-                        @*@foreach (var category in categories)
+                    <label class="control-label"> Product Image </label>
+                    <input name="filepImageProduct" type="file" class="form-control" />
+                    <span class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label"> Category </label>
+                    <select name="CategoryId" class="form-control select2" required>
+                        @foreach (var category in categories)
                         {
-                            <option value="@category.Id">@category.Name (@category.CategoryDataParent.Name)</option>
-                        }*@
+                            <option value="@category.Id">@category.Name</option>
+                        }
                     </select>
-                    <span asp-validation-for="CategoryId" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Detail" class="control-label"></label>
-                    <textarea asp-for="Detail" id="editor" class="form-control"></textarea>
-                    <span asp-validation-for="Detail" class="text-danger"></span>
+                    <label class="control-label">Detail</label>
+                    <textarea name="Detail" id="editor" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Price" class="control-label"></label>
-                    <input type="number" asp-for="Price" class="form-control" />
-                    <span asp-validation-for="Price" class="text-danger"></span>
+                    <label class="control-label">Price</label>
+                    <input type="number" name="Price" class="form-control" />
                 </div>
 
                 <div class="form-group">

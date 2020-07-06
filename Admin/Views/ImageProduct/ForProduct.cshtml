@@ -50,7 +50,7 @@
                     {
                         <tr>
                             <td><img src="@image.ImageLocation" height="50" alt="" /></td>
-                            <td>@image.CreateBy</td>
+                            <td>@image.UserCreate.UserName</td>
                             <td>@image.DateCreate</td>
                             <td>@image.Status</td>
                             <td>
@@ -81,10 +81,10 @@
             </div>
             <div class="modal-body">
                 <form asp-action="PostImage" method="post" enctype="multipart/form-data">
-                    <input type="hidden" asp-for="ProductId" value="@product.Id" />
+                    <input type="hidden" name="ProductId" value="@product.Id" />
                     <div class="form-group">
                         <label asp-for="FileInput" for="color"></label>
-                        <input type="file" id="color" asp-for="FileInput" class="colorChooser form-control" required>
+                        <input type="file" id="color" name="fileData" class="colorChooser form-control" required>
                         <small class="form-text text-muted"></small>
                     </div>
                     <button type="submit" class="btn btn-primary">Save</button>

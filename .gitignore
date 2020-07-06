@@ -388,3 +388,5 @@ e2e/*.map
 # End of https://www.toptal.com/developers/gitignore/api/angular,visualstudiocode
 /.dockerignore
 /WebApi/wwwroot/productImages
+*.jpg
+/Api/wwwroot/productImages

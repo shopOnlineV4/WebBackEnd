@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Admin.Common;
 using Admin.Models.ApiService;
+using Admin.Models.Business;
 using Microsoft.AspNetCore.Mvc;
 using ModelViews;
 using ModelViews.Enum;
@@ -16,12 +17,10 @@ namespace Admin.Controllers
     {
         private const string ModelName = "/api/category";
 
-        
+
         public async Task<IActionResult> Index()
         {
-            var res = await ServiceApi.GetData(ModelName);
-            if (res.IsSuccessStatusCode)
-                ViewBag.Categories = JsonConvert.DeserializeObject<List<CategoryMv>>(res.Content.ReadAsStringAsync().Result.ToString());
+            ViewBag.Categories = await CategoryBus.GetAll();
             return View();
         }
         public IActionResult Delete(Guid id)
@@ -36,11 +35,11 @@ namespace Admin.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(CategoryMv category)
+        public IActionResult Create(CategoryInput category)
         {
             if (!ModelState.IsValid) return View();
             category.CategoryParent = TypeCategories.Parent;
-            var res = ServiceApi.PostData<CategoryMv>(ModelName, category).Result;
+            var res = ServiceApi.PostData<CategoryInput>(ModelName, category).Result;
             if (res.IsSuccessStatusCode)
             {
                 TempData[ConstKey.Success] = "Success";
@@ -50,40 +49,33 @@ namespace Admin.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult CreateChild(CategoryMv category)
+        public IActionResult CreateChild(CategoryInput category)
         {
             if (!ModelState.IsValid) return RedirectToAction("DetailParent", "Category", new { id = category.SubCategoryId }); ;
-            category.CategoryParent = TypeCategories.Child;
-            var res = ServiceApi.PostData<CategoryMv>(ModelName, category).Result;
-            if (res.IsSuccessStatusCode)
+            bool res = CategoryBus.CreateChild(category);
+            if (res)
                 TempData[ConstKey.Success] = "Success";
             else TempData[ConstKey.Error] = "Error,Try Again! ";
             return RedirectToAction("DetailParent", "Category", new { id = category.SubCategoryId });
         }
 
         [HttpPost]
-        public IActionResult Update(CategoryMv category)
+        public IActionResult Update(Guid id, CategoryInput category)
         {
-            if (!ModelState.IsValid) return RedirectToAction("DetailParent", "Category", new { id = category.Id }); ;
-            category.CategoryParent = TypeCategories.Child;
-            var res = ServiceApi.Update<CategoryMv>(ModelName, category.Id, category).Result;
-            if (res.IsSuccessStatusCode) TempData[ConstKey.Success] = "Success";
+            if (!ModelState.IsValid) return RedirectToAction("DetailParent", "Category", new { id = id });
+            var res = CategoryBus.UpdateCategory(id, category);
+            if (res) TempData[ConstKey.Success] = "Success";
             else TempData[ConstKey.Error] = "Error,Try Again! ";
-            return RedirectToAction("DetailParent", "Category", new { id = category.Id });
+            return RedirectToAction("DetailParent", "Category", new { id = id });
         }
-
-
 
         [HttpGet]
         public IActionResult DetailParent(Guid id)
         {
-            var res = ServiceApi.GetDataById(ModelName, id).Result;
-            if (res.IsSuccessStatusCode)
-            {
-                var data = JsonConvert.DeserializeObject<CategoryMv>(res.Content.ReadAsStringAsync().Result.ToString());
-                return View(data);
-            }
-            return RedirectToAction("Index");
+            ViewBag.CategoryParrent = CategoryBus.GetById(id).Result;
+            if (ViewBag.CategoryParrent == null) return RedirectToAction("Index");
+            ViewBag.CategoryChild = CategoryBus.GetAll().Result.Where(x => x.SubCategoryId == id).ToList();
+            return View();
         }
     }
 }

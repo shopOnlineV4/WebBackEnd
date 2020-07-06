@@ -14,9 +14,9 @@ namespace Admin.Models.Business
     {
         private const string ModelName = "/api/ImageProduct";
 
-        internal async static Task<bool> PostImage(ImageMv imageProduct)
+        internal async static Task<bool> PostImage(ImageInputMv imageProduct)
         {
-            var res = await ServiceApi.PostData<ImageMv>(ModelName, imageProduct);
+            var res = await ServiceApi.PostData<ImageInputMv>(ModelName, imageProduct);
             return res.StatusCode == HttpStatusCode.Created;
         }
 

@@ -7,11 +7,13 @@
 }
 @section Scripts{
     <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="@Url.Content("~/")vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="@Url.Content("~/")vendor/datatables/dataTables.bootstrap4.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('#dataTable').DataTable();
+            $('#dataTable').DataTable({
+                "order": [[5, "des"]]
+            });
         });
     </script>
 
@@ -33,7 +35,10 @@
                             <th>Category</th>
                             <th>Image</th>
                             <th>Price</th>
+                            <th>User Create</th>
                             <th>Date Create</th>
+                            <th>User Modified</th>
+                            <th>Date Modified</th>
                             <th>Status</th>
                             <th>#</th>
                         </tr>
@@ -44,10 +49,17 @@
                         {
                             <tr>
                                 <td>@product.Name</td>
-                                <td>@product.Category.Name</td>
+                                <td>
+
+                                    <div>@product.Category?.Name</div>
+
+                                </td>
                                 <td><img height="80" width="80" src="@product.ImageProductLocation" /></td>
                                 <td>@product.Price</td>
+                                <td>@product.UserCreate?.UserName</td>
                                 <td>@product.DateCreate</td>
+                                <td>@product.UserModified?.UserName</td>
+                                <td></td>
                                 <td>@product.Status</td>
                                 <td>
                                     <a class="btn btn-success m-1 " href="@Url.Action("ForProduct","ImageProduct", new {productId = product.Id})">Images</a>
@@ -64,7 +76,10 @@
                             <th>Category</th>
                             <th>Image</th>
                             <th>Price</th>
+                            <th>User Create</th>
                             <th>Date Create</th>
+                            <th>User Modified</th>
+                            <th>Date Modified</th>
                             <th>Status</th>
                             <th>#</th>
                         </tr>

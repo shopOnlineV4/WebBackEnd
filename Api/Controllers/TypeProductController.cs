@@ -26,7 +26,7 @@ namespace Api.Controllers
             _mapper = mapper;
 
         }
-      
+
         // GET api/<TypeProductController>/5
         [HttpGet("GetTypeProductByProductId/{id}")]
         public async Task<IActionResult> GetTypeProductByProductId(Guid id)
@@ -34,8 +34,13 @@ namespace Api.Controllers
             try
             {
                 var product = _mapper.Map<ProductMv>(await _unitOfWork.Products.GetById(id));
-                product.Category = _mapper.Map<CategoryMv>(_unitOfWork.Categories.GetById(product.CategoryId).Result);
-                product.TypeProducts = _mapper.Map<List<TypeProductMv>>(_unitOfWork.TypeProducts.Get(x => x.ProductId == id));
+                product.Category = _mapper.Map<CategoryInfo>(_unitOfWork.Categories.GetById(product.CategoryId).Result);
+                product.TypeProducts = _mapper.Map<List<TypeProductMv>>(_unitOfWork.TypeProducts.Get(x => x.ProductId == id).Result.ToList());
+                foreach (var item in product.TypeProducts)
+                {
+                    item.ColorCode = _mapper.Map<ColorCodeMv>(await _unitOfWork.ColorCodes.GetById(item.ColorId));
+                    item.Size = _mapper.Map<SizeMv>(await _unitOfWork.Sizes.GetById(item.SizeId));
+                }
                 return Ok(product);
             }
             catch (Exception e)
@@ -57,7 +62,7 @@ namespace Api.Controllers
                     ProductId = typeProductInput.ProductId,
                     SizeId = typeProductInput.SizeId
                 };
-
+                typeProduct = _unitOfWork.TypeProducts.CreateNewAddReturnObject(typeProduct);
                 if (_unitOfWork.Commit()) return Created(Url.Action("Get"), _mapper.Map<TypeProductMv>(typeProduct));
                 return BadRequest();
             }
@@ -93,7 +98,7 @@ namespace Api.Controllers
 
         // DELETE api/<TypeProductController>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(Guid id)
         {
             _unitOfWork.TypeProducts.Delete(id);
             if (_unitOfWork.Commit())
@@ -168,6 +173,24 @@ namespace Api.Controllers
             }
         }
 
+        // DELETE api/<TypeProductController>/Color/5
+        [HttpDelete]
+        [Route("Color/{id}")]
+        public IActionResult DeleteColor(int id)
+        {
+            try
+            {
+                _unitOfWork.ColorCodes.Delete(id);
+                if (_unitOfWork.Commit()) return Ok();
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest();
+            }
+        }
+
         //SIZE MANAGEMENT
 
         //GET : api/<TypeProductController>/Size
@@ -217,10 +240,27 @@ namespace Api.Controllers
             {
                 var data = await _unitOfWork.Sizes.GetById(id);
                 if (data == null) return NotFound("null");
-                
+
                 data.Name = sizeInput.Name;
-                
+
                 if (_unitOfWork.Commit()) return Created(Url.Action("Get"), sizeInput);
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest();
+            }
+        }
+        // DELETE api/<TypeProductController>/Color/5
+        [HttpDelete]
+        [Route("Size/{id}")]
+        public IActionResult DeleteSize(int id)
+        {
+            try
+            {
+                _unitOfWork.Sizes.Delete(id);
+                if (_unitOfWork.Commit()) return Ok();
                 return BadRequest();
             }
             catch (Exception e)

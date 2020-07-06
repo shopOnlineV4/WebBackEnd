@@ -4,8 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Admin.Common;
+using Admin.Models.Business;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ModelViews;
+using ModelViews.Enum;
 
 namespace WebAdmin.Controllers
 {
@@ -13,83 +18,81 @@ namespace WebAdmin.Controllers
     {
         private const string ModelName = "/api/Product";
 
-        //public IActionResult Index()
-        //{
-        //    var products = ProductBus.GetAll().Result.ToList();
-        //    var categories = CategoryBus.GetAll().Result.ToList();
-        //    foreach (var product in products)
-        //    {
-        //        product.Category = categories.SingleOrDefault(x => x.Id == product.CategoryId);
-        //    }
-        //    ViewBag.Products = products;
+        public IActionResult Index()
+        {
+            var products = ProductBus.GetAll().Result.ToList();
 
-        //    return View();
-        //}
-        //[HttpGet]
-        //public IActionResult Create()
-        //{
-        //    ViewBag.Categories = CategoryBus.GetAll().Result.Where(x => x.CategoryParent == TypeCategories.Child).ToList();
-        //    return View();
-        //}
-        //[HttpPost]
-        //public IActionResult Create(ProductMv product)
-        //{
-        //    if (!ModelState.IsValid) return View();
-        //    if (product.FileImage != null)
-        //    {
-        //        var ms = new MemoryStream();
-        //        product.FileImage.CopyTo(ms);
-        //        var fileBytes = ms.ToArray();
-        //        string s = Convert.ToBase64String(fileBytes);
-        //        product.FileData = s;
-        //        product.FileImage = null;
-        //    }
-        //    product.ModifiedBy = Guid.Parse("a845b16a-4ca6-48e2-4ca6-08d817450c1a");
-        //    if (ProductBus.Post(product).Result)
-        //    {
-        //        TempData[ConstKey.Success] = "Success!";
-        //        return RedirectToAction("Index");
-        //    }
-        //    TempData[ConstKey.Error] = "Fail! Try again.";
-        //    return View();
-        //}
-        //[HttpGet]
-        //public IActionResult Update(Guid id)
-        //{
-        //    ViewBag.Categories = CategoryBus.GetAll().Result.Where(x => x.CategoryParent == TypeCategories.Child).ToList();
-        //    var product = ProductBus.GetById(id).Result;
-        //    return View(product);
-        //}
-        //[HttpPost]
-        //public IActionResult Update(ProductMv product)
-        //{
-        //    ViewBag.Categories = CategoryBus.GetAll().Result.Where(x => x.CategoryParent == TypeCategories.Child).ToList();
-        //    var productData = ProductBus.GetById(product.Id).Result;
-        //    if (!ModelState.IsValid) return View(productData);
-        //    product.ModifiedBy = Guid.Parse("a845b16a-4ca6-48e2-4ca6-08d817450c1a");
-        //    if (product.FileImage != null)
-        //    {
-        //        var ms = new MemoryStream();
-        //        product.FileImage.CopyTo(ms);
-        //        var fileBytes = ms.ToArray();
-        //        string s = Convert.ToBase64String(fileBytes);
-        //        product.FileData = s;
-        //        product.FileImage = null;
-        //    }
-        //    if (ProductBus.Update(product.Id, product).Result)
-        //    {
-        //        TempData[ConstKey.Success] = "Success!";
-        //        return RedirectToAction("Index");
-        //    }
-        //    TempData[ConstKey.Error] = "Fail! Try again.";
-        //    return View(productData);
-        //}
+            ViewBag.Products = products;
 
-        //public IActionResult Disable(Guid id)
-        //{
-        //    if (ProductBus.DisableAsync(id).Result) TempData[ConstKey.Success] = "Success.";
-        //    else TempData[ConstKey.Error] = "Fail! Try again.";
-        //    return RedirectToAction("Index");
-        //}
+            return View();
+        }
+        [HttpGet]
+        public IActionResult Create()
+        {
+            ViewBag.Categories = CategoryBus.GetAll().Result.Where(x => x.CategoryParent == TypeCategories.Child).ToList();
+            return View();
+        }
+        //insert new 
+        [HttpPost]
+        public IActionResult Create(IFormFile filepImageProduct, InsertProduct product)
+        {
+            if (!ModelState.IsValid) return View();
+            if (filepImageProduct != null)
+            {
+                var ms = new MemoryStream();
+                filepImageProduct.CopyTo(ms);
+                var fileBytes = ms.ToArray();
+                string s = Convert.ToBase64String(fileBytes);
+                product.FileData = s;
+
+            }
+            product.CreateBy = Guid.Parse("6eac70b2-50eb-42fb-00a7-08d81e5fa53a");
+            if (ProductBus.Post(product).Result)
+            {
+                TempData[ConstKey.Success] = "Success!";
+                return RedirectToAction("Index");
+            }
+            TempData[ConstKey.Error] = "Fail! Try again.";
+            return View();
+        }
+        [HttpGet]
+        public IActionResult Update(Guid id)
+        {
+            ViewBag.Categories = CategoryBus.GetAll().Result.Where(x => x.CategoryParent == TypeCategories.Child).ToList();
+            ViewBag.product = ProductBus.GetById(id).Result;
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Update(Guid id, IFormFile fileInput, InsertProduct product)
+        {
+            ViewBag.Categories = CategoryBus.GetAll().Result.Where(x => x.CategoryParent == TypeCategories.Child).ToList();
+
+            ViewBag.product = ProductBus.GetById(id).Result;
+            if (!ModelState.IsValid) return View();
+            product.ModifiedBy = Guid.Parse("a845b16a-4ca6-48e2-4ca6-08d817450c1a");
+            if (fileInput != null)
+            {
+                var ms = new MemoryStream();
+                fileInput.CopyTo(ms);
+                var fileBytes = ms.ToArray();
+                string s = Convert.ToBase64String(fileBytes);
+                product.FileData = s;
+
+            }
+            if (ProductBus.Update(id, product).Result)
+            {
+                TempData[ConstKey.Success] = "Success!";
+                return RedirectToAction("Index");
+            }
+            TempData[ConstKey.Error] = "Fail! Try again.";
+            return View();
+        }
+
+        public IActionResult Disable(Guid id)
+        {
+            if (ProductBus.DisableAsync(id).Result) TempData[ConstKey.Success] = "Success.";
+            else TempData[ConstKey.Error] = "Fail! Try again.";
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -52,6 +52,8 @@ namespace Api.Controllers
         {
             try
             {
+
+                var product = _mapper.Map<ProductMv>(await _unitOfWork.Products.GetById(id));
                 var images = _mapper.Map<List<ImageMv>>(await _unitOfWork.Images.Get(x => x.ProductId == id));
                 foreach (var item in images)
                 {
@@ -59,7 +61,8 @@ namespace Api.Controllers
                     item.UserModified = _mapper.Map<UserInfor>(_unitOfWork.AppUsers.GetById(item.ModifiedBy).Result);
                     item.ImageLocation = ConstString.BaseLocationImageLink + item.FileName;
                 }
-                return Ok(images);
+                product.Images = images;
+                return Ok(product);
             }
             catch (Exception e)
             {
@@ -69,9 +72,9 @@ namespace Api.Controllers
         }
         // POST api/<ImageProduct>
         [HttpPost]
-        public  IActionResult Post([FromBody] ImageInputMv imageData)
+        public IActionResult Post([FromBody] ImageInputMv imageData)
         {
-        
+
             try
             {
                 var image = new Image();
@@ -81,12 +84,13 @@ namespace Api.Controllers
                 }
                 else
                 {
-                    image.FileName = SaveFile.SaveB64File(imageData.FileInput);
+                    image.FileName = new SaveFile(_hostEnvironment).SaveB64File(imageData.FileInput);
                 }
                 image.Status = (int)Status.Active;
                 image.CreateBy = imageData.CreateBy;
                 image.DateCreate = DateTime.Now;
-                var res =  _unitOfWork.Images.CreateNewAddReturnObject(image);
+                image.ProductId = imageData.ProductId;
+                var res = _unitOfWork.Images.CreateNewAddReturnObject(image);
                 if (_unitOfWork.Commit()) return Created(Url.Action("Get"), _mapper.Map<ImageMv>(res));
                 return BadRequest();
             }
@@ -112,9 +116,9 @@ namespace Api.Controllers
                 {
                     if (image.FileName != "default.jpg")
                     {
-                        SaveFile.DeteFile(image.FileName);
+                        new SaveFile(_hostEnvironment).DeteFile(image.FileName);
                     }
-                    image.FileName = SaveFile.SaveB64File(imageData.FileInput);
+                    image.FileName = new SaveFile(_hostEnvironment).SaveB64File(imageData.FileInput);
                 }
                 _unitOfWork.Images.Edit(image);
 

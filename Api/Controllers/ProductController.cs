@@ -25,6 +25,7 @@ namespace Api.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _hostEnvironment;
+   
         public ProductController(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment hostEnvironment)
         {
             _unitOfWork = unitOfWork;
@@ -94,15 +95,16 @@ namespace Api.Controllers
         }
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get(Guid id)
         {
             try
             {   
                 var product = _mapper.Map<ProductMv>(await _unitOfWork.Products.GetById(id));
-                product.Category = _mapper.Map<CategoryMv>(_unitOfWork.Categories.GetById(product.CategoryId).Result);
+                product.Category = _mapper.Map<CategoryInfo>(_unitOfWork.Categories.GetById(product.CategoryId).Result);
                 product.UserCreate = _mapper.Map<UserInfor>(_unitOfWork.AppUsers.GetById(product.CreateBy).Result);
                 product.UserModified = _mapper.Map<UserInfor>(_unitOfWork.AppUsers.GetById(product.ModifiedBy).Result);
                 product.ImageProductLocation = ConstString.BaseLocationImageLink + product.ProductImage;
+               
                 product.TypeProducts = null;
                 product.Images = null;
                
@@ -121,7 +123,9 @@ namespace Api.Controllers
         {
             var product = new Product();
             product.Name = data.Name;
+            product.CategoryId = data.CategoryId;
             product.Price = data.Price;
+            product.Detail = data.Detail;
             product.Status = (int)Status.Active;
             product.CreateBy = data.CreateBy;
             product.DateCreate = DateTime.Now;
@@ -131,7 +135,7 @@ namespace Api.Controllers
             }
             else
             {
-                product.ProductImage = SaveFile.SaveB64File(data.FileData);
+                product.ProductImage = new SaveFile(_hostEnvironment).SaveB64File(data.FileData);
             }
             product = _unitOfWork.Products.CreateNewAddReturnObject(product);
             if (_unitOfWork.Commit()) return Created(Url.Action("Get"), _mapper.Map<ProductMv>(product));
@@ -141,28 +145,37 @@ namespace Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(Guid id, [FromBody] InsertProduct data)
         {
-            var product = await _unitOfWork.Products.GetById(id);
-            product.Name = data.Name;
-            product.Price = data.Price;
-            product.Status = (int)Status.Active;
-            product.ModifiedBy = data.ModifiedBy;
-       
-            product.DateModified = DateTime.Now;
-            if (data.FileData == null)
+            try
             {
-                product.ProductImage = "default.jpg";
-            }
-            else
-            {
-                if (product.ProductImage != "default.jpg")
+                var product = await _unitOfWork.Products.GetById(id);
+                product.Name = data.Name;
+                product.CategoryId = data.CategoryId;
+                product.Price = data.Price;
+                product.Status = (int)Status.Active;
+                product.ModifiedBy = data.ModifiedBy;
+                product.Detail = data.Detail;
+                product.DateModified = DateTime.Now;
+                if (data.FileData == null)
                 {
-                    SaveFile.DeteFile(product.ProductImage);
+                    product.ProductImage = "default.jpg";
                 }
-                product.ProductImage = SaveFile.SaveB64File(data.FileData);
+                else
+                {
+                    if (product.ProductImage != "default.jpg")
+                    {
+                        new SaveFile(_hostEnvironment).DeteFile(product.ProductImage);
+                    }
+                    product.ProductImage = new SaveFile(_hostEnvironment).SaveB64File(data.FileData);
+                }
+                _unitOfWork.Products.Edit(product);
+                if (_unitOfWork.Commit()) return Ok(_mapper.Map<ProductMv>(product));
+                return BadRequest();
             }
-            product = _unitOfWork.Products.CreateNewAddReturnObject(product);
-            if (_unitOfWork.Commit()) return Created(Url.Action("Get"), _mapper.Map<ProductMv>(product));
-            return BadRequest();
+            catch (Exception e)
+            {
+
+                return BadRequest(e);
+            }
 
         }
         // DELETE api/<ProductController>/5

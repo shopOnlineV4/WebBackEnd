@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
 using ModelViews.Enum;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace ModelViews
@@ -21,7 +22,7 @@ namespace ModelViews
         public Status Status { get; set; }
         public string ImageProductLocation { get; set; }
 
-        public CategoryMv Category { get; set; }
+        public CategoryInfo Category { get; set; }
         public List<ImageMv> Images { get; set; }
         public List<TypeProductMv> TypeProducts { get; set; }
         public UserInfor UserCreate { get; set; }
@@ -30,7 +31,7 @@ namespace ModelViews
 
     public class InsertProduct
     {
-        public Guid Id { get; set; }
+
         public Guid CategoryId { get; set; }
         public string Name { get; set; }
         public string Detail { get; set; }
@@ -55,7 +56,7 @@ namespace ModelViews
         public DateTime DateModified { get; set; }
         public Status Status { get; set; }
         public string ImageProductLocation { get; set; }
-        
+
         public CategoryInfo Category { get; set; }
         public UserInfor UserCreate { get; set; }
         public UserInfor UserModified { get; set; }

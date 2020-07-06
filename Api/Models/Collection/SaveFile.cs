@@ -9,12 +9,17 @@ namespace Api.Models.Collection
 {
     public class SaveFile
     {
-        public static IWebHostEnvironment HostEnvironment { get; }
+        public IWebHostEnvironment _HostEnvironment;
 
-        public static string SaveB64File(string data )
+        public SaveFile(IWebHostEnvironment HostEnvironment)
+        {
+            _HostEnvironment = HostEnvironment;
+        }
+
+        public  string SaveB64File(string data )
         {
             string fileName = DateTime.Now.Ticks + ".png";
-            string pathBase = HostEnvironment.WebRootPath + "\\productImages\\";
+            string pathBase = _HostEnvironment.WebRootPath + "\\productImages\\";
             if (!Directory.Exists(pathBase + "\\productImages\\"))
                 Directory.CreateDirectory(pathBase + "\\productImages\\");
             byte[] contents = Convert.FromBase64String(data);
@@ -25,11 +30,11 @@ namespace Api.Models.Collection
             return fileName;
         }
 
-        public static void DeteFile(string fileImageName)
+        public  void DeteFile(string fileImageName)
         {
             try
             {
-                string pathBase = HostEnvironment.WebRootPath + "\\productImages\\";
+                string pathBase = _HostEnvironment.WebRootPath + "\\productImages\\";
                 if (File.Exists(Path.Combine(pathBase, fileImageName)))
                     File.Delete(Path.Combine(pathBase, fileImageName));
             }

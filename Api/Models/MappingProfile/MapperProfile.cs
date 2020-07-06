@@ -18,6 +18,10 @@ namespace Api.Models.MappingProfile
             CreateMap<Product, ProductMv>();
             CreateMap<Image, ImageMv>();
 
+            CreateMap<TypeProduct, TypeProductMv>();
+            CreateMap<ColorCode, ColorCodeMv>();
+            CreateMap<Size, SizeMv>();
+
 
         }
     }

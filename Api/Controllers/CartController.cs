@@ -10,7 +10,7 @@ namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Cart : ControllerBase
+    public class CartController : ControllerBase
     {
         // GET: api/<Cart>
         [HttpGet]

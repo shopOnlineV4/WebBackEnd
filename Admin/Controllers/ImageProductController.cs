@@ -20,10 +20,10 @@ namespace Admin.Controllers
         [HttpGet]
         public IActionResult ForProduct(Guid productId)
         {
-            ViewBag.Product = Models.Business.ImageBus.GetByProductId(productId).Result;
+            ViewBag.Product = ImageBus.GetByProductId(productId).Result;
             return View();
         }
-        [HttpGet]
+
         public IActionResult DeleteImage(Guid id, Guid productId)
         {
             if (ImageBus.DeleteImage(id).Result) TempData[ConstKey.Success] = "Deleted";
@@ -33,20 +33,19 @@ namespace Admin.Controllers
 
 
         [HttpPost]
-        public IActionResult PostImage(ImageInputMv image, IFormFile fileData )
+        public IActionResult PostImage(ImageInputMv image, IFormFile fileData)
         {
-            var imageProduct = new ImageMv();
-            imageProduct.CreateBy = Guid.Parse("a845b16a-4ca6-48e2-4ca6-08d817450c1a");
-            imageProduct.ProductId = image.ProductId;
+
+            image.CreateBy = Guid.Parse("6eac70b2-50eb-42fb-00a7-08d81e5fa53a");
             //convert to image to base 64
             var ms = new MemoryStream();
             fileData.CopyTo(ms);
             var fileBytes = ms.ToArray();
             string s = Convert.ToBase64String(fileBytes);
 
-            imageProduct.ImageLocation = s;
+            image.FileInput = s;
 
-            if (ImageBus.PostImage(imageProduct).Result) TempData[ConstKey.Success] = "Add Success!";
+            if (ImageBus.PostImage(image).Result) TempData[ConstKey.Success] = "Add Success!";
             else TempData[ConstKey.Error] = "Fail, Try again !";
             return RedirectToAction("ForProduct", "ImageProduct", new { productId = image.ProductId });
         }

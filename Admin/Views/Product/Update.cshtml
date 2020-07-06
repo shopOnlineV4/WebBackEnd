@@ -1,8 +1,9 @@
 ﻿@using ModelViews;
-@model ModelViews.ProductMv;
+@model ModelViews.InsertProduct;
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ProductMv product = ViewBag.product;
     List<CategoryMv> categories = ViewBag.Categories;
 }
 
@@ -29,36 +30,41 @@
         <div class=" my-5">
             <form asp-action="Update" method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="Id" class="form-control" />
+                <input type="hidden" name="id" value="@product.Id" class="form-control" />
                 <div class="form-group">
-                    <label asp-for="Name" class="control-label"></label>
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
+                    <label class="control-label">Name</label>
+                    <input name="Name" value="@product.Name" class="form-control" required />
                 </div>
-                @*<div class="form-group">
-                    <label asp-for="FileImage" class="control-label"></label>
-                    <input asp-for="FileImage" class="form-control" />
-                    <span asp-validation-for="FileImage" class="text-danger"></span>
-                </div>*@
+
+                <div>
+                    <img src="@product.ImageProductLocation" alt="" height="150" class="img-fluid" />
+                </div>
+
                 <div class="form-group">
-                    <label asp-for="CategoryId" class="control-label"></label>
-                    @*<select asp-for="CategoryId" class="form-control select2">
+                    <label class="control-label"> Product Image </label>
+                    <input name="filepImageProduct" type="file" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label"> Category </label>
+                    <select name="CategoryId" class="form-control select2" required>
                         @foreach (var category in categories)
                         {
-                            <option value="@category.Id">@category.Name (@category.CategoryDataParent.Name)</option>
+                            if (category.Id == product.CategoryId)
+                            {
+                                <option selected="selected" value="@category.Id">@category.Name</option>
+                            }
+                            <option value="@category.Id">@category.Name</option>
                         }
-                    </select>*@
-                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Detail" class="control-label"></label>
-                    <textarea asp-for="Detail" id="editor" class="form-control"></textarea>
-                    <span asp-validation-for="Detail" class="text-danger"></span>
+                    <label class="control-label">Detail</label>
+                    <textarea name="Detail" id="editor" class="form-control">@product.Detail</textarea>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Price" class="control-label"></label>
-                    <input type="number" asp-for="Price" class="form-control" />
-                    <span asp-validation-for="Price" class="text-danger"></span>
+                    <label class="control-label">Price</label>
+                    <input type="number" name="Price" value="@product.Price" class="form-control" />
                 </div>
 
                 <div class="form-group">

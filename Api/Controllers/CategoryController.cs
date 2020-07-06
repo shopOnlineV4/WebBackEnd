@@ -18,7 +18,7 @@ namespace Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
-    {   
+    {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         public CategoryController(IUnitOfWork unitOfWork, IMapper mapper)
@@ -60,12 +60,18 @@ namespace Api.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Post([FromBody] CategoryMv category)
+        // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult Post([FromBody] CategoryInput category)
         {
             try
             {
-                var res = _unitOfWork.Categories.CreateNewAddReturnObject(_mapper.Map<Category>(category));
+                var res = _unitOfWork.Categories.CreateNewAddReturnObject(new Category()
+                {
+                    Name = category.Name,
+                    CategoryParent = (Domain.Models.Enum.TypeCategories)category.CategoryParent,
+                    SubCategoryId = category.SubCategoryId
+
+                });
                 if (_unitOfWork.Commit()) return Created(Url.Action("Get"), res);
                 return BadRequest();
             }
@@ -104,7 +110,6 @@ namespace Api.Controllers
                 //check if product have implemet this cayegory then not allow
                 var products = _unitOfWork.Products.Get(x => x.CategoryId == id).Result;
                 if (products.Count() > 0) return BadRequest();
-
                 _unitOfWork.Categories.Delete(id);
                 if (_unitOfWork.Commit()) return Ok();
                 return BadRequest();

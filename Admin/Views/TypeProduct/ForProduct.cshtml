@@ -48,8 +48,8 @@
                     @foreach (var typeroduct in product.TypeProducts)
                     {
                         <tr>
-                            <td>@typeroduct.Size.Name</td>
-                            <td><i style="color: @typeroduct.ColorCode.ColorData " class="fas fa-swatchbook fa-3x"></i> @typeroduct.ColorCode.Name</td>
+                            <td>@typeroduct.Size?.Name</td>
+                            <td><i style="color: @typeroduct.ColorCode?.ColorData " class="fas fa-swatchbook fa-3x"></i> @typeroduct.ColorCode.Name</td>
                             <td>
                                 <a href="#" class="btn btn-warning">
                                     info
