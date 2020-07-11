@@ -74,7 +74,7 @@ namespace Api.Controllers
             //login
             var user = await _userManager.FindByNameAsync(model.UserName);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
-            {
+            { 
 
                 //create a tokenDescriptor with userId to generate token
                 var tokenDescriptor = new SecurityTokenDescriptor
@@ -107,5 +107,9 @@ namespace Api.Controllers
                 user.UserName
             };
         }
+
+
+
+
     }
 }

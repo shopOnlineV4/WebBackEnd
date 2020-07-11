@@ -25,7 +25,7 @@ namespace Api.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _hostEnvironment;
-   
+
         public ProductController(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment hostEnvironment)
         {
             _unitOfWork = unitOfWork;
@@ -48,6 +48,8 @@ namespace Api.Controllers
                     product.UserCreate = _mapper.Map<UserInfor>(_unitOfWork.AppUsers.GetById(product.CreateBy).Result);
                     product.UserModified = _mapper.Map<UserInfor>(_unitOfWork.AppUsers.GetById(product.ModifiedBy).Result);
                     product.ImageProductLocation = ConstString.BaseLocationImageLink + product.ProductImage;
+
+
                 }
                 return Ok(data);
             }
@@ -58,6 +60,36 @@ namespace Api.Controllers
             }
 
         }
+        [HttpGet]
+        [Route("GetRandom8Proucts")]
+        public async Task<IActionResult> GetRandom8Proucts()
+        {
+            try
+            {
+                //get All list Product
+                var products = await _unitOfWork.Products.Get();
+                var data = _mapper.Map<List<ProductForList>>(products.OrderBy(qu => Guid.NewGuid()).Take(8));
+                // using auto mapper to auto mapping modelView  if same fieldName
+                foreach (var product in data)
+                {
+                    product.Category = _mapper.Map<CategoryInfo>(_unitOfWork.Categories.GetById(product.CategoryId).Result);
+                    product.UserCreate = _mapper.Map<UserInfor>(_unitOfWork.AppUsers.GetById(product.CreateBy).Result);
+                    product.UserModified = _mapper.Map<UserInfor>(_unitOfWork.AppUsers.GetById(product.ModifiedBy).Result);
+                    product.ImageProductLocation = ConstString.BaseLocationImageLink + product.ProductImage;
+
+
+                }
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return NotFound("No data");
+            }
+
+        }
+
+
         [HttpGet]
         [Route("ProductPaging")]
         public async Task<IActionResult> ProductPaging(int index = 1, int size = 10, string name = "")
@@ -98,16 +130,25 @@ namespace Api.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             try
-            {   
+            {
                 var product = _mapper.Map<ProductMv>(await _unitOfWork.Products.GetById(id));
                 product.Category = _mapper.Map<CategoryInfo>(_unitOfWork.Categories.GetById(product.CategoryId).Result);
                 product.UserCreate = _mapper.Map<UserInfor>(_unitOfWork.AppUsers.GetById(product.CreateBy).Result);
                 product.UserModified = _mapper.Map<UserInfor>(_unitOfWork.AppUsers.GetById(product.ModifiedBy).Result);
                 product.ImageProductLocation = ConstString.BaseLocationImageLink + product.ProductImage;
-               
-                product.TypeProducts = null;
-                product.Images = null;
-               
+
+                product.TypeProducts = _mapper.Map<List<TypeProductMv>>(_unitOfWork.TypeProducts.Get(x => x.ProductId == id).Result.ToList());
+                foreach (var item in product.TypeProducts)
+                {
+                    item.ColorCode = _mapper.Map<ColorCodeMv>(await _unitOfWork.ColorCodes.GetById(item.ColorId));
+                    item.Size = _mapper.Map<SizeMv>(await _unitOfWork.Sizes.GetById(item.SizeId));
+                }
+                product.Images = _mapper.Map<List<ImageMv>>(await _unitOfWork.Images.Get(x=>x.ProductId== product.Id));
+                foreach (var image in product.Images)
+                {
+                    image.ImageLocation = ConstString.BaseLocationImageLink + image.FileName;
+                }
+
                 return Ok(product);
             }
             catch (Exception e)
@@ -155,11 +196,7 @@ namespace Api.Controllers
                 product.ModifiedBy = data.ModifiedBy;
                 product.Detail = data.Detail;
                 product.DateModified = DateTime.Now;
-                if (data.FileData == null)
-                {
-                    product.ProductImage = "default.jpg";
-                }
-                else
+                if (data.FileData != null)
                 {
                     if (product.ProductImage != "default.jpg")
                     {

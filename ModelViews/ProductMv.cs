@@ -60,6 +60,7 @@ namespace ModelViews
         public CategoryInfo Category { get; set; }
         public UserInfor UserCreate { get; set; }
         public UserInfor UserModified { get; set; }
+        
     }
 
 
